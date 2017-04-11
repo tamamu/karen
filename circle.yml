@@ -1,0 +1,32 @@
+machine:
+  environment:
+    PATH: ~/.roswell/bin:$PATH
+    REVIEWDOG_VERSION: 0.9.6
+    COVERAGE_EXCLUDE: quicklisp/
+
+dependencies:
+  cache_directories:
+    - ~/.roswell/
+  pre:
+    - sudo apt-get update; sudo apt-get install freeglut3-dev libglew1.5-dev libxmu-dev libxi-dev
+    - curl -L https://raw.githubusercontent.com/snmsts/roswell/release/scripts/install-for-ci.sh | sh
+    - ros install sbcl-bin
+    - ros use sbcl-bin
+    - ros run -- --version
+    - ros install qlot
+    - ros install fukamachi/sblint
+    - ros install prove
+    - ros install cl-coveralls
+    - ros install codex
+  override:
+    - curl -fSL https://github.com/haya14busa/reviewdog/releases/download/$REVIEWDOG_VERSION/reviewdog_linux_amd64 -o reviewdog && chmod +x ./reviewdog
+  post:
+    - qlot install
+    - cp ~/.roswell/local-projects/fukamachi/sblint/roswell/sblint.ros ~/.roswell/bin/
+
+
+test:
+  override:
+    - >-
+      sblint | ./reviewdog -efm="%f:%l:%c: %m" -diff="git diff master" -ci="circle-ci"
+    - COVERALLS=true qlot exec run-prove karen-test.asd
