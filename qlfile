@@ -1,12 +1,5 @@
-ql :all :latest
-ql cl-annot
-ql prove
-ql cl-coveralls
-ql codex
-github sblint fukamachi/sblint
-ql cl-opengl
-ql cl-glut
-ql alexandria
-ql uiop
-ql lparallel
-ql trivial-features
+ql cl-annot :latest
+ql cl-opengl :latest
+ql alexandria :latest
+ql lparallel :latest
+ql trivial-features :latest
