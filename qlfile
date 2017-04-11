@@ -1,0 +1,12 @@
+ql :all :latest
+ql cl-annot
+ql prove
+ql cl-coveralls
+ql codex
+github sblint fukamachi/sblint
+ql cl-opengl
+ql cl-glut
+ql alexandria
+ql uiop
+ql lparallel
+ql trivial-features

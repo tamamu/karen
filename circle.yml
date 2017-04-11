@@ -1,0 +1,23 @@
+machine:
+  environment:
+    PATH: ~/.roswell/bin:$PATH
+    REVIEWDOG_VERSION: 0.9.6
+    COVERAGE_EXCLUDE: tests/
+
+dependencies:
+  pre:
+    - curl -L https://raw.githubusercontent.com/snmsts/roswell/release/scripts/install-for-ci.sh | sh
+    - ros install sbcl-bin
+    - ros install qlot
+  override:
+    - curl -fSL https://github.com/haya14busa/reviewdog/releases/download/$REVIEWDOG_VERSION/reviewdog_linux_amd64 -o reviewdog && chmod +x ./reviewdog
+  post:
+    - qlot install
+  cache_directories:
+    - ~/.roswell/
+
+test:
+  override:
+    - >-
+      sblint | reviewdog -efm="%f:%l:%c: %m" -diff="git diff master" -ci="circle-ci"
+    - run-prove karen-test.asd
